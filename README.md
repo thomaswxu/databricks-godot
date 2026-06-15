@@ -15,7 +15,20 @@ Latest tested supported Godot version: **4.5.2**
 ## Setup
 
 ### Install the Plugin
-Place the `databricks_godot.gdextension` file in your Godot game project directory: `my_godot_game/bin/databricks_godot.gdextension`.
+
+A GDExtension is two pieces that must sit together in your project's `bin/` folder:
+
+- the **`databricks_godot.gdextension`** manifest, and
+- the **compiled library** for the platform you're running, named exactly as the manifest references it (e.g. `libdatabricksgodot.linux.template_release.x86_64.so`).
+
+The manifest on its own does nothing — Godot reads it to locate and load the binary, so if the matching library isn't present the extension fails to load. Get the libraries by [compiling from source](#compiling-from-source) or from the `databricks-godot` GitHub Actions artifact, and drop them next to the manifest:
+
+```
+my_godot_game/bin/databricks_godot.gdextension
+my_godot_game/bin/libdatabricksgodot.linux.template_release.x86_64.so
+```
+
+**Which platforms need it?** The telemetry runs on the dedicated **server**, so the server always needs its platform's binary (Linux `x86_64` for the recommended setup). A **client** only needs the extension if it loads a scene or autoload that references the `Databricks` node — if you keep that node server-side only, clients don't need it; if it lives in a shared scene, ship each client platform's binary too. The compiled binary holds **no credentials** (Databricks secrets are read from the server's environment at runtime, never compiled in), so bundling it with a client is not a security risk.
 
 ### Set Up the Server
 
