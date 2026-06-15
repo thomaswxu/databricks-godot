@@ -62,6 +62,9 @@ jobs:
         with:
           platform: ${{ matrix.target.platform }}
           em-version: 3.1.62
+          # Build Windows with MSVC (preinstalled on the runner) instead of MinGW.
+          # Avoids the flaky Chocolatey-based MinGW install; ignored on other platforms.
+          windows-compiler: msvc
 
       # Build GDExtension (with caches)
 
