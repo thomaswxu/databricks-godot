@@ -34,6 +34,19 @@ my_godot_game/bin/libdatabricksgodot.linux.template_release.x86_64.so
 
 AWS Lightsail or your own
 
+Set environment variables/etc.
+
+### Set Up Databricks
+
+#### Zerobus
+
+1. [Create the table](https://docs.databricks.com/aws/en/ingestion/zerobus-ingest?language=REST%C2%A0API#create-or-identify-the-target-table) to land events to in your desired catalog/schema.
+2. [Create a Service Principal and grant the required permissions.](https://docs.databricks.com/aws/en/ingestion/zerobus-ingest?language=REST%C2%A0API#create-a-service-principal-and-grant-permissions)
+
+#### Lakebase
+
+1. todo
+
 ## Usage
 
 The `Databricks` node

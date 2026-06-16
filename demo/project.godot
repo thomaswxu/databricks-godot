@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Net="*res://networking/net.gd"
 DevWindowTiler="*res://networking/dev_window_tiler.gd"
+DatabricksZerobus="*res://networking/databricks_zerobus.gd"
 
 [debug]
 
