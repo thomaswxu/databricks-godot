@@ -1,5 +1,14 @@
-[gd_scene format=3 uid="uid://daosg8l02pd6u"]
+[gd_scene load_steps=2 format=3 uid="uid://daosg8l02pd6u"]
+
+[ext_resource type="Script" uid="uid://ba6fu8st1mhjm" path="res://game/world.gd" id="1_world"]
 
 [node name="Node2D" type="Node2D"]
 
 [node name="Databricks" type="Databricks" parent="."]
+
+[node name="World" type="Node2D" parent="."]
+script = ExtResource("1_world")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="World"]
+_spawnable_scenes = PackedStringArray("uid://c100l2hrh48rx")
+spawn_path = NodePath("..")

@@ -42,7 +42,7 @@ func join_server(host: String, port: int) -> Error:
 		push_error("create_client failed: %s" % error)
 		return error
 	multiplayer.multiplayer_peer = peer
-	print("[client] connecting to %s:%d ..." % [host, port])
+	print("Client: Connecting to %s:%d ..." % [host, port])
 	return Error.OK
 
 # --- signal handlers ---
@@ -56,14 +56,14 @@ func _on_peer_disconnected(id: int) -> void:
 		print("Server: Peer disconnected: ", id)
 
 func _on_connected_to_server() -> void:
-	print("Client: Connected to server, my id=", multiplayer.get_unique_id())
+	print("Client [id=%d]: Connected to server" % [multiplayer.get_unique_id()])
 	ping.rpc_id(1, "Hello from client %d" % multiplayer.get_unique_id())   # client -> server
 
 func _on_connection_failed() -> void:
-	push_error("Client: Connection failed")
+	push_error("Client [id=%d]: Connection failed" % [multiplayer.get_unique_id()])
 
 func _on_server_disconnected() -> void:
-	push_error("Client: Server disconnected")
+	push_error("Client [id=%d]: Server disconnected" % [multiplayer.get_unique_id()])
 
 func _parse_args() -> Dictionary[String, Variant]:
 	var out: Dictionary[String, Variant] = {}
@@ -91,4 +91,4 @@ func ping(msg: String) -> void:
 
 @rpc("authority", "call_remote", "reliable")
 func pong(msg: String) -> void:
-	print("Client: Received pong: ", msg)
+	print("Client [id=%d]: Received pong: %s" % [multiplayer.get_unique_id(), msg])
