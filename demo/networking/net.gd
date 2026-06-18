@@ -56,6 +56,7 @@ func _on_peer_disconnected(id: int) -> void:
 	if multiplayer.is_server():
 		print("Server: Peer disconnected: ", id)
 		DatabricksZerobus.log_event("player_disconnected", {"peer_id": str(id)})
+		DatabricksLakebase.remove_player(id)
 
 func _on_connected_to_server() -> void:
 	print("Client [id=%d]: Connected to server" % [multiplayer.get_unique_id()])

@@ -14,6 +14,7 @@ var _input: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	_owner_id = name.to_int()
+	add_to_group("players")   # so the server's Lakebase reporter can find every avatar
 
 func _physics_process(delta: float) -> void:
 	if multiplayer.is_server():

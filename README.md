@@ -30,22 +30,37 @@ my_godot_game/bin/libdatabricksgodot.linux.template_release.x86_64.so
 
 **Which platforms need it?** The telemetry runs on the dedicated **server**, so the server always needs its platform's binary (Linux `x86_64` for the recommended setup). A **client** only needs the extension if it loads a scene or autoload that references the `Databricks` node — if you keep that node server-side only, clients don't need it; if it lives in a shared scene, ship each client platform's binary too. The compiled binary holds **no credentials** (Databricks secrets are read from the server's environment at runtime, never compiled in), so bundling it with a client is not a security risk.
 
-### Set Up the Server
-
-AWS Lightsail or your own
-
-Set environment variables/etc.
-
 ### Set Up Databricks
 
 #### Zerobus
 
 1. [Create the table](https://docs.databricks.com/aws/en/ingestion/zerobus-ingest?language=REST%C2%A0API#create-or-identify-the-target-table) to land events to in your desired catalog/schema.
-2. [Create a Service Principal and grant the required permissions.](https://docs.databricks.com/aws/en/ingestion/zerobus-ingest?language=REST%C2%A0API#create-a-service-principal-and-grant-permissions)
+1. [Create a Service Principal and grant the required permissions.](https://docs.databricks.com/aws/en/ingestion/zerobus-ingest?language=REST%C2%A0API#create-a-service-principal-and-grant-permissions)
 
 #### Lakebase
 
-1. todo
+1. Create a [Lakebase Postgres **Autoscaling** project](https://docs.databricks.com/aws/en/oltp/projects/).
+    - This is required to use the Data API (see below).
+1. Enable the [Data API](https://docs.databricks.com/aws/en/oltp/projects/data-api) in the project.
+1. Create your desired table in the schema exposed by the Data API (`public` by default).
+1. Create a [role](https://docs.databricks.com/aws/en/oltp/projects/manage-roles) for a Service Principal (can be the same as the one used for Zerobus), and also  grant the Service Principal's role [permissions](https://docs.databricks.com/aws/en/oltp/projects/data-api#grant-permissions-to-users) to the table you created.
+    - This can be done in one step via the SQL Editor in the Lakebase UI:
+        ```sql
+        CREATE EXTENSION IF NOT EXISTS databricks_auth;
+        SELECT databricks_create_role('<sp-application-id>', 'SERVICE_PRINCIPAL');
+
+        GRANT "<sp-application-id>" TO authenticator;
+        GRANT USAGE ON SCHEMA public TO "<sp-application-id>";
+        GRANT SELECT, INSERT, UPDATE, DELETE ON public.my_table TO "<sp-application-id>"; # or "ALL TABLES IN SCHEMA public" instead of one table
+        ```
+
+
+### Set Up the Server
+
+AWS Lightsail or your own
+
+Set environment variables/etc.
+- LAKEBASE_DATA_API_URL: copy value from Lakebase Data API page's API URL
 
 ## Usage
 
